@@ -1,4 +1,5 @@
 from  app import db
+
 from datetime import datetime
 
 class Sales(db.Model):
@@ -22,3 +23,5 @@ class Sales(db.Model):
     @classmethod
     def fetch_one_record(cls, id):
         return cls.query.filter_by(id=id).first()
+
+

@@ -5,12 +5,16 @@ import pygal
 import psycopg2
 
 from flask_sqlalchemy import SQLAlchemy
-
+from Config.Config import Development
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:admin@127.0.0.1:5432/sales_demo'
-app.config['SECRET_KEY'] = 'KenyaYetuMoja'
-app.config['DEBUG'] = True
+
+ #import the configs
+app.config.from_object(Development)
+"""the below code blow has been done with """
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:admin@127.0.0.1:5432/sales_demo'
+# app.config['SECRET_KEY'] = 'KenyaYetuMoja'
+# app.config['DEBUG'] = True
 db = SQLAlchemy(app)
 
 
@@ -45,6 +49,36 @@ def test(num1,num2):
 #     print( int(num1)+int(num2))
 #     return 'yes'
 
+#creating a delete route
+@app.route('/delete/<int:id>')
+def delete(id):
+    # print(id)
+    record=Inventories.fetch_one_record(id)
+    # print(record.name)
+
+    db.session.delete(record)
+    db.session.commit()
+
+    flash('You have succesfully deleted the inventory','danger')
+    return redirect(url_for('hello_world'))
+
+@app.route('/edit/<int:id>',methods=['POST','GET'])
+def edit(id):
+    record=Inventories.fetch_one_record(id)
+
+    if request.method == 'POST':
+        record.name=request.form['Name']
+        record.type = request.form['type']
+        record.buying_price = request.form['bp']
+        record.selling_price = request.form['sp']
+        record.stock = request.form['Stock']
+
+        db.session.commit()
+
+        return redirect(url_for('hello_world'))
+
+    return render_template('edit.html',record=record)
+
 @app.route('/salepro/<int:id>',methods=['POST','GET'])
 def salez(id):
 
@@ -72,31 +106,6 @@ def salez(id):
 
         return redirect(url_for('hello_world'))
 
-# @app.route('/sales_pro/{{<int:id>}}',methods=['POST','GET'])
-# def makeSales(id):
-#     print(id)
-#     #fetching a record from the db
-#     record=Inventories.fetch_one_record(id)
-#     # print(record.stock)
-#
-#     if record:
-#         if request.method == 'POST':
-#
-#             quantity=request.form['Quantity']
-#             newStock=record.stock-int(quantity)
-#
-#             # print(quantity)
-#             # print(newStock)
-#             record.stock =newStock
-#             db.session.commit()
-#
-#             #Updating to the sales table
-#             sales=Sales(inv_id=id,quantity=quantity)
-#             sales.add_records()
-#             #mideule to notify sale of an item
-#             flash('You Successfuly made a Sale','success')
-#
-#     return 'stan'
 
 @app.route('/viewsales/<int:id>')
 def viewSales(id):

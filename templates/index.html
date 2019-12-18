@@ -6,12 +6,20 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 <style>
-body {background-color: lightgreen;}
+body {background-color: lightgrey;}
 h1 {color: white; text-align: center;}
 p {font-family: verdana; font-size: 20px;}
 </style>
 
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
 
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+
+<script>
+    $(document).ready( function () {
+    $('#myTable').DataTable();
+} );
+</script>
 </head>
 
 <body>
@@ -95,7 +103,7 @@ p {font-family: verdana; font-size: 20px;}
 
 <div class="row">
     <div class="col-12">
-        <table class="table">
+        <table class="table" id="myTable">
   <thead>
     <tr>
       <th scope="col">Id</th>
@@ -154,11 +162,17 @@ p {font-family: verdana; font-size: 20px;}
       </div>
 
   </div>
-</div>
+</div></td>
+          <td><a href="/viewsales/{{ each.id }}"> <button type="button" class="btn btn-secondary" data-dismiss="modal">View Sales</button></a></td>
+          <td><a href=" {{ url_for('edit', id=each.id)}}"> <button type="button" class="btn btn-secondary" data-dismiss="editmodal">Edit Sales</button></a></td>
+       <td>
+{#     <a href="/delete/{{ each.id }}" ><button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#deleteModal">#}
+{#                   DELETE</button></a>#}
 
-      </td>
-            <td><a href="/viewsales/{{ each.id }}"> <button type="button" class="btn btn-secondary" data-dismiss="modal">View Sales</button></a></td>
-      <td><button type="button" class="btn btn-secondary" data-dismiss="modal">Delete</button> </td>
+                <a href="{{url_for('delete' ,id=each.id)}}" ><button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#deleteModal">
+                   DELETE</button></a>
+
+            </td>
     </tr>
 
 
