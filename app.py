@@ -45,8 +45,9 @@ def test(num1,num2):
 #     print( int(num1)+int(num2))
 #     return 'yes'
 
-@app.route('/salepro/<int:id>')
+@app.route('/salepro/<int:id>',methods=['POST','GET'])
 def salez(id):
+
     record=Inventories.fetch_one_record(id)
     # print(id)
     # return 'T'
@@ -56,7 +57,7 @@ def salez(id):
             quantity=request.form['Quantity']
             newStock=record.stock-int(quantity)
 
-            # print(quantity)
+            print(quantity)
             # print(newStock)
             record.stock =newStock
             db.session.commit()
